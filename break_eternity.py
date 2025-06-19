@@ -505,7 +505,8 @@ def multiply(a, b):
     try:
         return addlayer(add(log(a),log(b)))
     except:
-        return "Error doing multiplication"    
+        return "Error doing multiplication"   
+ 
 def division(a, b):
     try:
         if a < "ee308" and b < "ee308":
@@ -533,18 +534,22 @@ def root(a, b):
         return 10
     if lt(log(a), b) == "True":
         return 1
-    if gt(a, "eeee308"):
+    if gt(a, "eeee308") == "True":
         return str(a)
     else:
-        return power(a, division(1, b))
+        try:
+            return power(a, 1/b)
+        except (OverflowError, TypeError, ValueError):
+            return power(a, div(1,b))
 
 def sqrt(x):
     return root(x, 2)
+
 def factorial(n):
     sign, abs_x = get_sign_and_abs(n)
     try:
         if sign == -1:
-            return "NaN"
+            return "Factorial can't be negative"
         try:
             n = float(abs_x)
         except (TypeError, OverflowError, ValueError):
@@ -628,19 +633,14 @@ def fact(x):
     return factorial(x)
 def pow(a, b):
     return power(a, b)
-
 def tetr(a, h):
     return tetration(a, h)
-
 def mul(a, b):
     return multiply(a, b)
-
 def add(a, b):
     return addition(a, b)
-
 def sub(a, b):
     return subtract(a, b)
-
 def div(a, b):
     return division(a, b)
 # Formats
