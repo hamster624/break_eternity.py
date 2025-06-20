@@ -1,4 +1,3 @@
-# Currently in beta and  probably will be for a while because nobody wants to test this so i have to.
 # Made by the_hamster_god and my github is "https://github.com/hamster624".
 # I have made a roblox calculator and a website calculator here they are web:"https://hamster624.github.io/ExpantaNum-Calculator/", and the roblox: "https://www.roblox.com/games/89516713438784/calculator".
 # Special thanks to Wolframalpha for helping me with large powers and another special thanks to ExpantaNum.js because that's what i used for examples.
@@ -323,8 +322,6 @@ def log(x):
                 s = s[1:]
             if count == 1:
                 return s
-            if count >= FORMAT_THRESHOLD:
-                return correct(x)
             else:
                 return correct('e' * (count - 1) + s)
         else:
@@ -491,6 +488,7 @@ def addition(a, b):
     else:
         result = subtract_positive(abs_b, abs_a, 0)
         return apply_sign(result, sign_b)
+
 def subtract(a, b): return addition(a, negate(b))
 
 def multiply(a, b):
@@ -562,7 +560,7 @@ def factorial(n):
     except (ValueError, TypeError, OverflowError):
         pass
     if gt(n, "e1000000000000") == "True":
-        return addlayer(n, 1) # yes what you are seeing is that if the values is greater than e1000000000000 it just 10^x the number
+        return addlayer(n, 1) # yes what you are seeing is that if the values is greater than e1000000000000 it just 10^x the number this is for computation speed
     else:
         term1 = mul(add(n, 0.5), log(n))
         term2 = negate(mul(n, 0.4342944819032518))
