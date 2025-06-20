@@ -1,3 +1,4 @@
+# Currently in beta and  probably will be for a while because nobody wants to test this so i have to.
 # Made by the_hamster_god and my github is "https://github.com/hamster624".
 # I have made a roblox calculator and a website calculator here they are web:"https://hamster624.github.io/ExpantaNum-Calculator/", and the roblox: "https://www.roblox.com/games/89516713438784/calculator".
 # Special thanks to Wolframalpha for helping me with large powers and another special thanks to ExpantaNum.js because that's what i used for examples.
@@ -296,14 +297,7 @@ def log(x):
         if x == "NaN" or x.startswith("Error:"):
             return x
         if x.startswith("10^^"):
-            height_str = x[4:]
-            try:
-                height = float(height_str)
-                if height <= 1:
-                    return "1" if height == 1 else "Error: Height <= 0"
-                return "10^^" + str(height - 1)
-            except:
-                return "NaN"
+            return str(x)
         elif x.startswith("(10^)^"):
             parts = x.split(' ', 1)
             if len(parts) < 2:
@@ -317,6 +311,8 @@ def log(x):
                 return "NaN"
             if k == 1:
                 return str(mantissa)
+            if k >= LARGE_HEIGHT_THRESHOLD:
+                return correct(x)
             else:
                 return f"(10^)^{k-1} {mantissa_str}"
         elif x.startswith('e'):
@@ -327,8 +323,10 @@ def log(x):
                 s = s[1:]
             if count == 1:
                 return s
+            if count >= FORMAT_THRESHOLD:
+                return correct(x)
             else:
-                return tetr(10, slog('e' * (count - 1) + s))
+                return correct('e' * (count - 1) + s)
         else:
             try:
                 num_val = float(x)
@@ -493,8 +491,7 @@ def addition(a, b):
     else:
         result = subtract_positive(abs_b, abs_a, 0)
         return apply_sign(result, sign_b)
-def subtract(a, b):
-    return addition(a, negate(b))
+def subtract(a, b): return addition(a, negate(b))
 
 def multiply(a, b):
     try:
@@ -542,8 +539,7 @@ def root(a, b):
         except (OverflowError, TypeError, ValueError):
             return power(a, div(1,b))
 
-def sqrt(x):
-    return root(x, 2)
+def sqrt(x): return root(x, 2)
 
 def factorial(n):
     sign, abs_x = get_sign_and_abs(n)
@@ -608,8 +604,7 @@ def gt(a, b):
             else:
                 return "False"
 
-def lt(a, b):
-    return "True" if gt(b, a) == "True" else "False"
+def lt(a, b): return "True" if gt(b, a) == "True" else "False"
 
 def eq(a, b):
     sign_a, abs_a = get_sign_and_abs(a)
@@ -629,20 +624,13 @@ def eq(a, b):
         return "True" if abs(float(abs_a) - float(abs_b)) < 1e-10 else "False"
     return "False" 
 # Short names
-def fact(x):
-    return factorial(x)
-def pow(a, b):
-    return power(a, b)
-def tetr(a, h):
-    return tetration(a, h)
-def mul(a, b):
-    return multiply(a, b)
-def add(a, b):
-    return addition(a, b)
-def sub(a, b):
-    return subtract(a, b)
-def div(a, b):
-    return division(a, b)
+def fact(x): return factorial(x)
+def pow(a, b): return power(a, b)
+def tetr(a, h): return tetration(a, h)
+def mul(a, b): return multiply(a, b)
+def add(a, b): return addition(a, b)
+def sub(a, b): return subtract(a, b)
+def div(a, b): return division(a, b)
 # Formats
 def hyper_e(tet, decimals=format_decimals):
     if isinstance(tet, (int, float)):
@@ -774,4 +762,32 @@ def format_float_scientific(x: float, sig_digits: int = 16) -> str:
     mant = x / (10 ** exp)
     mant_str = f"{mant:.{sig_digits}g}".rstrip('0').rstrip('.')
     return f"{mant_str}e{exp}"
+def correct(x):
+    if not isinstance(x, str):
+        return x
+    if x.startswith('e'):
+        count = 0
+        s = x
+        while s.startswith('e'):
+            count += 1
+            s = s[1:]
+        if count > FORMAT_THRESHOLD:
+            return f"(10^)^{count} {s}"
+        return x
+    if x.startswith('(10^)^'):
+        parts = x.split(' ', 1)
+        if len(parts) < 2:
+            return "NaN"
+        head, mantissa = parts
+        k_str = head[len('(10^)^'):]
+        try:
+            k = int(float(k_str))
+        except ValueError:
+            return x
+        if k < FORMAT_THRESHOLD:
+            return 'e' * k + mantissa
+        if k >= LARGE_HEIGHT_THRESHOLD:
+            return f"10^^{k}"
+        return x
+    return x
 # The end of break_eternity.py
