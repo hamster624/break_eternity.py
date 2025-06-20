@@ -745,9 +745,6 @@ def comma_format(number, decimals=format_decimals):
         return s
     return f"{number:,.{decimals}f}"
 
-def default_format(tet_str: str) -> str:
-    return tet_str
-
 def format_int_scientific(n: int, sig_digits: int = 16) -> str:
     s = f"{n:.{sig_digits}e}"
     mant, exp = s.split('e')
