@@ -328,7 +328,7 @@ def log(x):
             if count == 1:
                 return s
             else:
-                return 'e' * (count - 1) + s
+                return tetr(10, slog('e' * (count - 1) + s))
         else:
             try:
                 num_val = float(x)
