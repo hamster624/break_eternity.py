@@ -1,3 +1,4 @@
+# This is currently in beta so if you see any bugs report them and this might be in beta for a time because i have got nobody to test.
 # Made by the_hamster_god and my github is "https://github.com/hamster624".
 # I have made a roblox calculator and a website calculator here they are web:"https://hamster624.github.io/ExpantaNum-Calculator/", and the roblox: "https://www.roblox.com/games/89516713438784/calculator".
 # Special thanks to Wolframalpha for helping me with large powers and another special thanks to ExpantaNum.js because that's what i used for examples.
@@ -757,6 +758,7 @@ def format_float_scientific(x: float, sig_digits: int = 16) -> str:
     mant = x / (10 ** exp)
     mant_str = f"{mant:.{sig_digits}g}".rstrip('0').rstrip('.')
     return f"{mant_str}e{exp}"
+
 def correct(x):
     if not isinstance(x, str):
         return x
